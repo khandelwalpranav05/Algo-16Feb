@@ -99,7 +99,88 @@ int linearSearch(int arr[], int si, int n, int data) {
 }
 
 bool isSorted(int arr[], int si, int n) {
+	if (si == n - 1) {
+		return true;
+	}
 
+	if (arr[si] > arr[si + 1]) {
+		return false;
+	} else {
+		return isSorted(arr, si + 1, n);
+	}
+}
+
+int lastIndex(int arr[], int si, int n, int data) {
+	if (si == n) {
+		return -1;
+	}
+
+	int idx = lastIndex(arr, si + 1, n, data);
+
+	if (idx == -1) {
+		if (arr[si] == data) {
+			return si;
+		} else {
+			return -1;
+		}
+	} else {
+		return idx;
+	}
+}
+
+int fib(int n) {
+	if (n == 0 or n == 1) return n;
+	// if (n == 0) {
+	// 	return 0;
+	// }
+
+	// if (n == 1) {
+	// 	return 1;
+	// }
+
+	int fibn1 = fib(n - 1);
+	int fibn2 = fib(n - 2);
+
+	int fibn = fibn1 + fibn2;
+	return fibn;
+
+	// return fib(n - 1) + fib(n - 2);
+}
+
+int countBinaryString(int n) {
+	if (n == 1 or n == 2) {
+		return n + 1;
+	}
+
+	int zero = countBinaryString(n - 1);
+	int one = countBinaryString(n - 2);
+
+	int total = one + zero;
+	return total;
+}
+
+int pairingProblem(int n) {
+	// TODO
+
+	return 0;
+}
+
+int countBoardPath(int start, int end) {
+	if (start == end) {
+		return 1;
+	}
+
+	if (start > end) {
+		return 0;
+	}
+
+	int count = 0;
+
+	for (int dice = 1; dice <= 6; dice++) {
+		count += countBoardPath(start + dice, end);
+	}
+
+	return count;
 }
 
 int main() {
@@ -116,11 +197,35 @@ int main() {
 
 	// printDecInc(5);
 
-	int arr[] = {5, 3, 2, 6, 8, 9, 10};
-	int n = 7;
-	int data = 8;
+	// int arr[] = {5, 3, 2, 6, 8, 9, 10};
+	// int n = 7;
+	// int data = 8;
 
-	cout << linearSearch(arr, 0, n, data) << endl;
+	// cout << linearSearch(arr, 0, n, data) << endl;
+
+	// int arr[] = {1, 2, 3, 14, 5, 6};
+	// int n = 6;
+
+	// cout << isSorted(arr, 0, n) << endl;
+
+	// int arr[] = {1, 2, 3, 4, 5, 2, 3, 5};
+	// int n = 8;
+	// int data = 2;
+
+	// cout << lastIndex(arr, 0, n, data) << endl;
+
+	// cout << fib(7) << endl;
+
+	// cout << countBinaryString(4) << endl;
+
+	// cout << pairingProblem(3) << endl;
+
+	cout << countBoardPath(0, 10) << endl;
+
+	// int x = linearSearch();
+	// cout << x << endl;
+
+	// cout << linearSearch() << endl;
 
 	return 0;
 }
