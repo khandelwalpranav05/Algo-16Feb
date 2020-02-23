@@ -46,7 +46,7 @@ int main() {
 
 	cout << sizeof(s) << endl;
 
-	string str = (string)"Coding" + "Blocks";
+	// string str = arr[0] +  "Coding";
 
 	cout << str << endl;
 
