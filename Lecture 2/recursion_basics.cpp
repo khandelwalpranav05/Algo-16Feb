@@ -160,9 +160,13 @@ int countBinaryString(int n) {
 }
 
 int pairingProblem(int n) {
-	// TODO
+	if (n == 1 or n == 2) return n;
 
-	return 0;
+	int akela = pairingProblem(n - 1);
+	int saath = pairingProblem(n - 2);
+
+	int total = akela + (n - 1) * saath;
+	return total;
 }
 
 int countBoardPath(int start, int end) {
@@ -181,6 +185,22 @@ int countBoardPath(int start, int end) {
 	}
 
 	return count;
+}
+
+int countMazePath(int sr, int sc, int er, int ec) {
+	if (sr == er and sc == ec) {
+		return 1;
+	}
+
+	if (sc > ec or sr > er) {
+		return 0;
+	}
+
+	int horizontal = countMazePath(sr, sc + 1, er, ec);
+	int vertical = countMazePath(sr + 1, sc, er, ec);
+
+	int total = horizontal + vertical;
+	return total;
 }
 
 int main() {
@@ -220,7 +240,9 @@ int main() {
 
 	// cout << pairingProblem(3) << endl;
 
-	cout << countBoardPath(0, 10) << endl;
+	// cout << countBoardPath(0, 10) << endl;
+
+	// cout << countMazePath(0, 0, 2, 2) << endl;
 
 	// int x = linearSearch();
 	// cout << x << endl;
