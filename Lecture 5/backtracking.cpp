@@ -174,6 +174,79 @@ bool ratInaMaze(char maze[4][4],int sr,int sc,int er,int ec){
 	return false;
 }
 
+void printRatInaMaze(char maze[4][4],int sol[4][4],int sr,int sc,int er,int ec){
+	if(sr==er and sc==ec){
+		sol[sr][sc] = 1;
+		for(int i=0;i<=er;i++){
+			for(int j=0;j<=ec;j++){
+				cout<<sol[i][j]<<" ";
+			}
+			cout<<endl;
+		}
+
+		cout<<"**********************"<<endl;
+
+		return;
+	}
+
+	if(sr>er or sc>ec){
+		return;
+	}
+
+	if(maze[sr][sc]=='X'){
+		return;
+	}
+
+	sol[sr][sc]= 1;
+
+	printRatInaMaze(maze,sol,sr+1,sc,er,ec);
+	printRatInaMaze(maze,sol,sr,sc+1,er,ec);
+
+	sol[sr][sc] = 0;
+}
+
+bool isPossible(int mat[9][9],int row,int col,int n,int num){
+
+	for(int i=0;i<n;i++){
+		if(mat[row][i]==num or mat[i][col]==num){
+			return false;
+		}
+	}
+
+	
+}
+
+bool sudokuSolver(int mat[9][9],int row,int col,int n){
+	if(row==n){
+		return true;
+	}
+
+	if(mat[row][col]!=0){
+		return sudokuSolver(mat,row,col+1,n);
+	}
+
+	if(col==n){
+		return sudokuSolver(mat,row+1,0,n);
+	}
+
+	for(int num=1;num<=9;num++){
+		if(isPossible(mat,row,col,n,num)){
+
+			mat[row][col] = num;
+
+			bool restOfTheSudoku = sudokuSolver(mat,row,col+1,n);
+
+			if(restOfTheSudoku){
+				return true;
+			}
+
+		}
+	}
+
+	mat[row][col] = 0;
+	return false;
+}
+
 int main(){
 	int n = 4;
 	int board[4][4] = {0};
@@ -184,16 +257,28 @@ int main(){
 
 	// printNQueens(board,0,n);
 
-	char maze[][4] = {
-		{'0','0','0','0'},
-		{'0','0','0','X'},
-		{'0','0','0','0'},
-		{'0','X','0','0'},
-	};
+	// char maze[][4] = {
+	// 	{'0','0','0','0'},
+	// 	{'0','0','0','X'},
+	// 	{'0','0','0','0'},
+	// 	{'0','X','0','0'},
+	// };
 
-	int sol[4][4] = {0};
+	// int sol[4][4] = {0};
 
-	cout<<ratInaMaze(maze,0,0,3,3)<<endl;
+	// cout<<ratInaMaze(maze,0,0,3,3)<<endl;
+	// printRatInaMaze(maze,sol,0,0,3,3);
+
+	int mat[9][9] = {
+            {5,3,0,0,7,0,0,0,0},
+            {6,0,0,1,9,5,0,0,0},
+            {0,9,8,0,0,0,0,6,0},
+            {8,0,0,0,6,0,0,0,3},
+            {4,0,0,8,0,3,0,0,1},
+            {7,0,0,0,2,0,0,0,6},
+            {0,6,0,0,0,0,2,8,0},
+            {0,0,0,4,1,9,0,0,5},
+            {0,0,0,0,8,0,0,7,9}};
 
 	return 0;
 }
