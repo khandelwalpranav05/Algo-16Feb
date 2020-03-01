@@ -213,20 +213,39 @@ bool isPossible(int mat[9][9],int row,int col,int n,int num){
 		}
 	}
 
-	
+	int starting_x = (row/3)*3;
+	int starting_y = (col/3)*3;
+
+	for(int i = starting_x;i<starting_x+3;i++){
+		for(int j=starting_y;j<starting_y+3;j++){
+			if(mat[i][j]==num){
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 bool sudokuSolver(int mat[9][9],int row,int col,int n){
 	if(row==n){
-		return true;
-	}
 
-	if(mat[row][col]!=0){
-		return sudokuSolver(mat,row,col+1,n);
+		for(int i=0;i<n;i++){
+			for(int j=0;j<n;j++){
+				cout<<mat[i][j]<<" ";
+			}
+			cout<<endl;
+		}
+
+		return true;
 	}
 
 	if(col==n){
 		return sudokuSolver(mat,row+1,0,n);
+	}
+
+	if(mat[row][col]!=0){
+		return sudokuSolver(mat,row,col+1,n);
 	}
 
 	for(int num=1;num<=9;num++){
@@ -239,7 +258,6 @@ bool sudokuSolver(int mat[9][9],int row,int col,int n){
 			if(restOfTheSudoku){
 				return true;
 			}
-
 		}
 	}
 
@@ -247,9 +265,24 @@ bool sudokuSolver(int mat[9][9],int row,int col,int n){
 	return false;
 }
 
+int helper(vector<int> &nums,int si){
+    if(si>=nums.size()){
+        return 0;
+    }
+        
+    int include = helper(nums,si+2) + nums[si];
+    int skip = helper(nums,si+1);
+        
+    return max(include,skip);
+}
+
+int rob(vector<int>& nums) {
+        return helper(nums,0);
+}
+
 int main(){
-	int n = 4;
-	int board[4][4] = {0};
+	// int n = 4;
+	// int board[4][4] = {0};
 
 	// cout<<NQueens(board,0,n)<<endl;
 
@@ -278,7 +311,11 @@ int main(){
             {7,0,0,0,2,0,0,0,6},
             {0,6,0,0,0,0,2,8,0},
             {0,0,0,4,1,9,0,0,5},
-            {0,0,0,0,8,0,0,7,9}};
+            {0,0,0,0,8,0,0,7,9}
+    };
+
+    int n = 9;
+    cout<<sudokuSolver(mat,0,0,n)<<endl;
 
 	return 0;
 }
