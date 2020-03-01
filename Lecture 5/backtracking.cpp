@@ -151,6 +151,29 @@ void printNQueens(int board[4][4],int row,int n){
 
 }
 
+bool ratInaMaze(char maze[4][4],int sr,int sc,int er,int ec){
+	if(sr==er and sc==ec){
+		return true;
+	}
+
+	if(sr>er or sc>ec){
+		return false;
+	}
+
+	if(maze[sr][sc]=='X'){
+		return false;
+	}
+
+	bool horizontal = ratInaMaze(maze,sr+1,sc,er,ec);
+	bool vertical = ratInaMaze(maze,sr,sc+1,er,ec);
+
+	if(horizontal or vertical){
+		return true;
+	}
+
+	return false;
+}
+
 int main(){
 	int n = 4;
 	int board[4][4] = {0};
@@ -167,6 +190,10 @@ int main(){
 		{'0','0','0','0'},
 		{'0','X','0','0'},
 	};
+
+	int sol[4][4] = {0};
+
+	cout<<ratInaMaze(maze,0,0,3,3)<<endl;
 
 	return 0;
 }
