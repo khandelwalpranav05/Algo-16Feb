@@ -440,6 +440,45 @@ void quickSort(int arr[], int start, int end) {
 	quickSort(arr, left, end);
 }
 
+int helper(vector<int> &nums, int start, int end) {
+	if (start == end) {
+		return nums[start];
+	}
+
+	int mid = start + (end - start) / 2;
+
+	if (nums[mid - 1] != nums[mid] and nums[mid + 1] != nums[mid]) {
+		return nums[mid];
+	}
+
+	if (nums[mid] == nums[mid + 1]) {
+
+		int dist = mid - start;
+
+		if (dist % 2 == 0) {
+			return helper(nums, mid + 2, end);
+		} else {
+			return helper(nums, start, mid - 1);
+		}
+
+	} else {
+
+		int dist = mid - start;
+
+		if (dist % 2 == 0) {
+			return helper(nums, start, mid - 2);
+		} else {
+			return helper(nums, mid + 1, end);
+		}
+	}
+}
+
+int singleNonDuplicate(vector<int>& nums) {
+	int n = nums.size();
+
+	return helper(nums, 0, n - 1);
+}
+
 int main() {
 
 	// int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
