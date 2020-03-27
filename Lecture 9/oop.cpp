@@ -30,6 +30,11 @@ public:
         cout << "Calling the empty Constructor" << endl;
     }
 
+    Car(Car &X) {
+        this->price = X.price;
+        this->name = X.name;
+        cout << "New Copy Constructor" << endl;
+    }
 
     void start() {
         cout << "Ignition" << endl;
@@ -83,40 +88,61 @@ int main() {
 //    cout<<d.name<<"->"<<d.price<<endl;
 
 
-    Car a;
-    Car b(12, "Jazz");
-
-    b.display();
-
-    a.display();
-
-    Car x("Honda City");
-    x.setPrice(-90);
-
-    x.display();
-
-    Car y(34);
-
-//    Car p("op",89,9.67);
-
-
-//    cout<< sizeof(c)<<endl;
-//    cout<< sizeof(Car)<<endl;
+//    Car a;
+//    Car b(12,"Jazz");
 //
-//    int a = 10;
-//    cout<< sizeof(a)<<endl;
-//    cout<< sizeof(int)<<endl;
-
-//    int a;
-//    float b;
-//    bool c;
-//    char d;
-
-//    string s2 = "pranav";
+//    b.display();
 //
-//    string s1 = "khandelwal";
+//    a.display();
 //
-//    cout<< sizeof(s1)<<endl;
+//    Car x("Honda City");
+//    x.setPrice(-90);
+//
+//    x.display();
+//
+//    Car y(34);
+//
+////    Car p(56);
+//
+////    Car p("op",89,9.67);
+//
+//
+////    cout<< sizeof(c)<<endl;
+////    cout<< sizeof(Car)<<endl;
+////
+////    int a = 10;
+////    cout<< sizeof(a)<<endl;
+////    cout<< sizeof(int)<<endl;
+//
+////    int a;
+////    float b;
+////    bool c;
+////    char d;
+//
+////    string s2 = "pranav";
+////
+////    string s1 = "khandelwal";
+////
+////    cout<< sizeof(s1)<<endl;
+
+//    Car a(100,"Creta");
+//
+//    Car b(a);
+//
+//    a.display();
+//
+//    b.display();
+
+    Car *c = new Car(32, "A");
+
+//    Car p(32,"A");
+
+//    cout<<p.name<<endl;
+
+    cout << (*c).name << endl;
+    cout << c->name << endl;
+
+    delete c;
 
     return 0;
 }
