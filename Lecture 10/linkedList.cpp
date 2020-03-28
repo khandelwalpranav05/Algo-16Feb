@@ -15,6 +15,12 @@
 
 using namespace std;
 
+// class test {
+// 	string name;
+// 	int arr[89];
+// 	char brr[67];
+// }
+
 class node {
 public:
 	int data;
@@ -173,52 +179,163 @@ node* midPoint(node* head) {
 	node* fast = head;
 
 	//TODO
-	while () {
-
+	while (fast->next != NULL and fast->next->next != NULL) {
+		slow = slow->next;
+		fast = fast->next->next;
 	}
 
 	return slow;
 }
 
+void reverseIterative(node* &head) {
+	node* prev = NULL;
+	node* curr = head;
+
+	while (curr != NULL) {
+
+		node* n = curr->next;
+		curr->next = prev;
+		prev = curr;
+		curr = n;
+	}
+
+	head = prev;
+}
+
+node* reverseRecursive(node* head) {
+	if (head == NULL or head->next == NULL) {
+		return head;
+	}
+
+	node* newHead = reverseRecursive(head->next);
+
+	node* curr = head;
+
+	curr->next->next = curr;
+	curr->next = NULL;
+	return newHead;
+}
+
+node* merge(node* a, node* b) {
+	if (a == NULL) {
+		return b;
+	}
+
+	if (b == NULL) {
+		return a;
+	}
+
+	node* c;
+
+	if (a->data <= b->data) {
+		c = a;
+		c->next = merge(a->next, b);
+	} else {
+		c = b;
+		c->next = merge(a, b->next);
+	}
+
+	return c;
+}
+
+node* mergeSort(node* head) {
+	// TODO
+}
+
+node* kReverse(node* head) {
+	//TODO
+}
+
+node* kthFromLast(node* head) {
+	//TODO
+}
+
 int main() {
 
-	node* head = NULL;
+	// node* head = NULL;
 
-	insertAtTail(head, 7);
+	// insertAtTail(head, 7);
 
-	display(head);
+	// display(head);
 
-	deleteAtTail(head);
+	// deleteAtTail(head);
 
-	display(head);
+	// display(head);
 
-	display(head);
+	// insertAtHead(head, 4);
+	// insertAtHead(head, 3);
+	// insertAtHead(head, 2);
+	// insertAtHead(head, 1);
 
-	insertAtHead(head, 4);
-	insertAtHead(head, 3);
-	insertAtHead(head, 2);
-	insertAtHead(head, 1);
+	// display(head);
 
-	display(head);
+	// insertAtTail(head, 5);
+	// insertAtTail(head, 6);
 
-	insertAtTail(head, 5);
-	insertAtTail(head, 6);
+	// display(head);
 
-	display(head);
+	// cout << "Reversed *******************" << endl;
 
-	insertAtIndex(head, 789, 5);
+	// reverseIterative(head);
 
-	display(head);
+	// display(head);
 
-	deleteAtIndex(head, 5);
+	// cout << "Reversed *******************" << endl;
 
-	display(head);
+	// head = reverseRecursive(head);
+
+	// display(head);
+
+	// node* mid = midPoint(head);
+	// cout << mid->data << endl;
+
+	// insertAtHead(head, 90);
+
+	// display(head);
+
+	// mid = midPoint(head);
+	// cout << mid->data << endl;
+
+
+	// insertAtIndex(head, 789, 5);
+
+	// display(head);
+
+	// deleteAtIndex(head, 5);
+
+	// display(head);
 
 	// cout << length(head) << endl;
 
 	// deleteAtHead(head);
 
 	// display(head);
+
+	node* head1 = NULL;
+
+	insertAtTail(head1, 1);
+	insertAtTail(head1, 3);
+	insertAtTail(head1, 5);
+	insertAtTail(head1, 8);
+	insertAtTail(head1, 9);
+
+	node* head2 = NULL;
+
+	insertAtTail(head2, 2);
+	insertAtTail(head2, 4);
+	insertAtTail(head2, 6);
+	insertAtTail(head2, 7);
+
+	cout << "First Linked List ******************" << endl;
+	display(head1);
+
+	cout << "Second Linked List ******************" << endl;
+	display(head2);
+
+	node* mergedList = merge(head1, head2);
+
+	cout << " Merged Linked List ******************" << endl;
+	display(mergedList);
 
 	return 0;
 }
