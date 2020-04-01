@@ -102,9 +102,9 @@ int main() {
 
 	cout << "*****FLATTEN*******" << endl;
 
-	// head = flattenLinkedList(head);
+	head = flattenLinkedList(head);
 
-	// displayFlatten(head);
+	displayFlatten(head);
 
 	return 0;
 }
