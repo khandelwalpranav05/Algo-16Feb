@@ -283,7 +283,54 @@ node* kReverse(node* head, int k) {
 }
 
 void printInReverse(node* head) {
+	if (head == NULL) {
+		return;
+	}
 
+	printInReverse(head->next);
+
+	cout << head->data << "->";
+}
+
+bool helper(node* right) {
+	if (right == NULL) {
+		return true;
+	}
+
+	bool recursionResult = helper(right->next);
+
+	bool ans = true;
+
+	if (recursionResult == false or left->val != right->val) {
+		ans = false;
+	}
+
+	left = left->next;
+	return ans;
+}
+
+node* left;
+bool isPalindrome(node* head) {
+
+	left = head;
+	return helper(head);
+}
+
+bool hasCycle(ListNode *head) {
+
+	ListNode* slow = head;
+	ListNode* fast = head;
+
+	while (fast != NULL and fast->next != NULL) {
+		slow = slow->next;
+		fast = fast->next->next;
+
+		if (slow == fast) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // node* kthFromLast(node* head) {
@@ -421,6 +468,7 @@ int main() {
 	display(head);
 
 	printInReverse(head); // 5-4-3-2-1
+	cout << endl;
 
 	return 0;
 }
