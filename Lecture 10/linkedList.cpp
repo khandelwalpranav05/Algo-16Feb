@@ -239,16 +239,56 @@ node* merge(node* a, node* b) {
 }
 
 node* mergeSort(node* head) {
-	// TODO
+	if (head == NULL or head->next == NULL) {
+		return head;
+	}
+
+	node* mid = midPoint(head);
+
+	node* a = head;
+
+	node* b = mid->next;
+
+	mid->next = NULL;
+
+	a = mergeSort(a);
+	b = mergeSort(b);
+
+	node* c = merge(a, b);
+
+	return c;
 }
 
-node* kReverse(node* head) {
-	//TODO
+node* kReverse(node* head, int k) {
+	if (head == NULL or head->next == NULL ) {
+		return head;
+	}
+
+	node* prev = NULL;
+	node* curr = head;
+
+	int count = 1;
+
+	while (count <= k and curr != NULL) { //
+		node* n = curr->next;
+		curr->next = prev;
+		prev = curr;
+		curr = n;
+		count++;
+	}
+
+	head->next = kReverse(curr, k);
+
+	return prev;
 }
 
-node* kthFromLast(node* head) {
-	//TODO
+void printInReverse(node* head) {
+
 }
+
+// node* kthFromLast(node* head) {
+// 	//TODO
+// }
 
 int main() {
 
@@ -311,31 +351,64 @@ int main() {
 
 	// display(head);
 
-	node* head1 = NULL;
+	// node* head1 = NULL;
 
-	insertAtTail(head1, 1);
-	insertAtTail(head1, 3);
-	insertAtTail(head1, 5);
-	insertAtTail(head1, 8);
-	insertAtTail(head1, 9);
+	// insertAtTail(head1, 1);
+	// insertAtTail(head1, 3);
+	// insertAtTail(head1, 5);
+	// insertAtTail(head1, 8);
+	// insertAtTail(head1, 9);
 
-	node* head2 = NULL;
+	// node* head2 = NULL;
 
-	insertAtTail(head2, 2);
-	insertAtTail(head2, 4);
-	insertAtTail(head2, 6);
-	insertAtTail(head2, 7);
+	// insertAtTail(head2, 2);
+	// insertAtTail(head2, 4);
+	// insertAtTail(head2, 6);
+	// insertAtTail(head2, 7);
 
-	cout << "First Linked List ******************" << endl;
-	display(head1);
+	// cout << "First Linked List ******************" << endl;
+	// display(head1);
 
-	cout << "Second Linked List ******************" << endl;
-	display(head2);
+	// cout << "Second Linked List ******************" << endl;
+	// display(head2);
 
-	node* mergedList = merge(head1, head2);
+	// node* mergedList = merge(head1, head2);
 
-	cout << " Merged Linked List ******************" << endl;
-	display(mergedList);
+	// cout << " Merged Linked List ******************" << endl;
+	// display(mergedList);
+
+	// node* head = NULL;
+
+	// insertAtTail(head, 1);
+	// insertAtTail(head, 6);
+	// insertAtTail(head, 5);
+	// insertAtTail(head, 3);
+	// insertAtTail(head, 4);
+	// insertAtTail(head, 2);
+
+	// display(head);
+
+	// head = mergeSort(head);
+
+	// display(head);
+
+	node* head = NULL;
+
+	insertAtTail(head, 1);
+	insertAtTail(head, 2);
+	insertAtTail(head, 3);
+	insertAtTail(head, 4);
+	insertAtTail(head, 5);
+	insertAtTail(head, 6);
+	insertAtTail(head, 7);
+	insertAtTail(head, 8);
+	insertAtTail(head, 9);
+
+	display(head);
+
+	head = kReverse(head, 3);
+
+	display(head);
 
 	return 0;
 }
