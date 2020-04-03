@@ -316,10 +316,10 @@ bool isPalindrome(node* head) {
 	return helper(head);
 }
 
-bool hasCycle(ListNode *head) {
+bool hasCycle(node *head) {
 
-	ListNode* slow = head;
-	ListNode* fast = head;
+	node* slow = head;
+	node* fast = head;
 
 	while (fast != NULL and fast->next != NULL) {
 		slow = slow->next;
@@ -331,6 +331,58 @@ bool hasCycle(ListNode *head) {
 	}
 
 	return false;
+}
+
+node *detectCycle(node *head) {
+
+	node* slow = head;
+	node* fast = head;
+
+	while (fast != NULL and fast->next != NULL) {
+		slow = slow->next;
+		fast = fast->next->next;
+
+		if (slow == fast) {
+			break;
+		}
+	}
+
+	if (fast == NULL or fast->next == NULL) {
+		return NULL;
+	}
+
+	slow = head;
+
+	while (slow != fast) {
+		slow = slow->next;
+		fast = fast->next;
+	}
+
+	return slow;
+}
+
+node* partition(node* head, int x) {
+
+	node* dummy1 = new node(0);
+	node* dummy2 = new node(0);
+
+	node* a = dummy1;
+	node* b = dummy2;
+
+	while (head != NULL) {
+		if (head->val < x) {
+			a->next = head;
+			a = a->next;
+		} else {
+			b->next = head;
+			b = b->next;
+		}
+		head = head->next;
+	}
+
+	b->next = NULL;
+	a->next = dummy2->next;
+	return dummy1->next;
 }
 
 // node* kthFromLast(node* head) {
