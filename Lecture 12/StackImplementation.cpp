@@ -63,7 +63,7 @@ public: // 1
 
 int main() {
 
-	Stack<char> s;
+	Stack<T> s;
 
 	s.push('A');
 	s.push('C');
