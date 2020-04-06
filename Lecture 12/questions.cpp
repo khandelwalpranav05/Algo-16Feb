@@ -92,12 +92,112 @@ void nextGreater(int arr[], int n) {
 	}
 }
 
+void stockSpan(int arr[], int n) {
+
+	stack<int> s;
+
+	for (int i = 0; i < n; i++) {
+
+		while (!s.empty() and arr[s.top()] <= arr[i]) {
+			s.pop();
+		}
+
+		if (s.empty()) {
+			cout << arr[i] << " -> " << i + 1 << endl;
+		} else {
+
+			int idx = s.top();
+
+			int diff = i - idx;
+			cout << arr[i] << " -> " << diff << endl;
+		}
+
+		s.push(i);
+	}
+}
+
+void nextSmaller(int arr[], int n) {
+	//TODO
+	//INDEX
+
+	int brr[n];
+
+	for (int i = 0; i < n; i++) {
+		//brr;
+	}
+}
+//.        0 1  2 3 4  5
+// input[] 2 3  1 5 6  2
+// outpu[] 1 1 -1 2 2 -1
+
+int histogramArea(int arr[], int n) {
+
+	stack<int> s;
+
+	int maxArea = INT_MIN;
+
+	int i = 0;
+
+	while (i < n) {
+
+		if (s.empty() or arr[s.top()] <= arr[i]) {
+			s.push(i);
+			i++;
+		} else {
+
+			int extractedTop = s.top();
+			s.pop();
+
+			int height = arr[extractedTop];
+
+			int currArea;
+
+			if (s.empty()) {
+				currArea = height * i;
+			} else {
+				currArea = height * (i - s.top() - 1);
+			}
+
+			maxArea = max(currArea, maxArea);
+		}
+	}
+
+	while (!s.empty()) {
+
+		int extractedTop = s.top();
+		s.pop();
+
+		int height = arr[extractedTop];
+		int currArea;
+
+		if (s.empty()) {
+			currArea = height * i;
+		} else {
+			currArea = height * (i - s.top() - 1);
+		}
+
+		maxArea = max(currArea, maxArea);
+	}
+
+	return maxArea;
+}
+
 int main() {
 
-	int arr[] = {59, 8, 7, 12, 2, 14};
-	int n = 6;
+	// int arr[] = {59, 8, 7, 12, 2, 14};
+	// int n = 6;
 
-	nextGreater(arr, n);
+	// nextGreater(arr, n);
+
+	// int arr[] = {100, 80, 60, 70, 60, 75, 85};
+	// int n = 7;
+
+	// stockSpan(arr, n);
+
+	int arr[] = {6, 2, 5, 4, 5, 1, 6};
+	int n = 7;
+
+	cout << histogramArea(arr, n) << endl;
 
 	return 0;
 }
