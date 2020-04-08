@@ -182,6 +182,67 @@ int histogramArea(int arr[], int n) {
 	return maxArea;
 }
 
+void firstNonRepeaingCharacter() {
+
+	queue<char> q;
+	int freq[256] = {0};
+
+	char ch;
+	cin >> ch;
+
+	while (ch != '.') {
+
+		q.push(ch);
+		freq[ch] += 1;
+
+		while (!q.empty()) {
+
+			char option = q.front();
+
+			if (freq[option] > 1) {
+				q.pop();
+			} else {
+				cout << option << " ";
+				break;
+			}
+		}
+
+		if (q.empty()) {
+			cout << -1 << " ";
+		}
+
+		cin >> ch;
+	}
+}
+
+int brr[100001][100001];
+
+int largestRectangleWith1s(int arr[][4], int n, int m) {
+
+	int maxSize = INT_MIN;
+
+	int currVal = histogramArea(arr[0], m);
+
+	maxSize = max(currVal, maxSize);
+
+	for (int i = 1; i < n; i++) {
+
+		for (int j = 0; j < m; j++) {
+			if (arr[i][j] == 1) {
+				arr[i][j] = arr[i - 1][j] + 1;
+			} else {
+				arr[i][j] = 0;
+			}
+		}
+
+		currVal = histogramArea(arr[i], m);
+
+		maxSize = max(maxSize, currVal);
+	}
+
+	return maxSize;
+}
+
 int main() {
 
 	// int arr[] = {59, 8, 7, 12, 2, 14};
@@ -194,10 +255,24 @@ int main() {
 
 	// stockSpan(arr, n);
 
-	int arr[] = {6, 2, 5, 4, 5, 1, 6};
-	int n = 7;
+	// int arr[] = {6, 2, 5, 4, 5, 1, 6};
+	// int n = 7;
 
-	cout << histogramArea(arr, n) << endl;
+	// cout << histogramArea(arr, n) << endl;
+
+	// firstNonRepeaingCharacter();
+
+	// int arr[4][4] = {
+	// 	{ 0, 1, 1, 0 },
+	// 	{ 1, 1, 1, 1 },
+	// 	{ 1, 1, 1, 1 },
+	// 	{ 1, 1, 0, 0 },
+	// };
+
+	// cout << largestRectangleWith1s(arr, 4, 4) << endl;
+
+	// vector<vector<int> > v;
+
 
 	return 0;
 }
