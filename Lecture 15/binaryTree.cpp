@@ -72,19 +72,55 @@ int countNodes(TreeNode* root) {
 
 // Inorder HomeWork
 void inOrder(TreeNode* root) {
-	//TODO
+	if (root == NULL) return;
+
+	inOrder(root->left);
+	cout << root->val << " ";
+	inOrder(root->right);
 }
 
 int sumOfNodes(TreeNode* root) {
+	if (root == NULL) {
+		return 0;
+	}
 
+	int leftSum = sumOfNodes(root->left);
+	int rightSum = sumOfNodes(root->right);
+
+	int total = root->val + leftSum + rightSum;
+	return total;
 }
 
 bool search(TreeNode* root, int key) {
+	if (root == NULL) {
+		return false;
+	}
 
+	if (root->val == key) {
+		return true;
+	}
+
+	bool leftSearch = search(root->left, key);
+	bool rightSearch = search(root->right, key);
+
+	// if (leftSearch or rightSearch) {
+	// 	return true;
+	// }
+
+	// return false;
+	return leftSearch or rightSearch;
 }
 
 int height(TreeNode* root) {
+	if (root == NULL) {
+		return -1;
+	}
 
+	int leftHeight = height(root->left);
+	int rightHeight = height(root->right);
+
+	int totalHeight = max(leftHeight, rightHeight) + 1;
+	return totalHeight;
 }
 
 int main() {
@@ -99,7 +135,9 @@ int main() {
 	// postOrder(root);
 	// cout << endl;
 
-	cout << countNodes(root) << endl;
+	// cout << countNodes(root) << endl;
+
+	cout << height(root) << endl;
 
 	return 0;
 }
