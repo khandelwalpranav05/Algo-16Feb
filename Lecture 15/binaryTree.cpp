@@ -36,6 +36,8 @@ TreeNode* builtTree(TreeNode* root) {
 	return root;
 }
 
+// Time: O(N)
+// Space: O(N) or O(h)
 void preOrder(TreeNode* root) {
 	if (root == NULL) {
 		return;
@@ -47,6 +49,8 @@ void preOrder(TreeNode* root) {
 	preOrder(root->right);
 }
 
+// Time: O(N)
+// Space: O(N) or O(h)
 void postOrder(TreeNode* root) {
 	if (root == NULL) {
 		return;
@@ -58,6 +62,8 @@ void postOrder(TreeNode* root) {
 	cout << root->val << " ";
 }
 
+// Time: O(N)
+// Space: O(N) or O(h)
 int countNodes(TreeNode* root) {
 	if (root == NULL) {
 		return 1;
@@ -71,6 +77,8 @@ int countNodes(TreeNode* root) {
 }
 
 // Inorder HomeWork
+// Time: O(N)
+// Space: O(N) or O(h)
 void inOrder(TreeNode* root) {
 	if (root == NULL) return;
 
@@ -79,6 +87,8 @@ void inOrder(TreeNode* root) {
 	inOrder(root->right);
 }
 
+// Time: O(N)
+// Space: O(N) or O(h)
 int sumOfNodes(TreeNode* root) {
 	if (root == NULL) {
 		return 0;
@@ -91,6 +101,8 @@ int sumOfNodes(TreeNode* root) {
 	return total;
 }
 
+// Time: O(N)
+// Space: O(N) or O(h)
 bool search(TreeNode* root, int key) {
 	if (root == NULL) {
 		return false;
@@ -111,6 +123,8 @@ bool search(TreeNode* root, int key) {
 	return leftSearch or rightSearch;
 }
 
+// Time: O(N)
+// Space: O(N) or O(h)
 int height(TreeNode* root) {
 	if (root == NULL) {
 		return -1;
@@ -121,6 +135,125 @@ int height(TreeNode* root) {
 
 	int totalHeight = max(leftHeight, rightHeight) + 1;
 	return totalHeight;
+}
+
+// Time: O(N)
+// Space: O(N) or O(h)
+int replaceSum(TreeNode* root) {
+	if (root == NULL) return 0;
+
+	if (root->left == NULL and root->right == NULL) {
+		return root->val;
+	}
+
+	int leftSum = replaceSum(root->left);
+	int rightSum = replaceSum(root->right);
+
+	int temp = root->val;
+	root->val = leftSum + rightSum;
+
+	return root->val + temp;
+}
+
+// Time: O(n)
+bool isSameTree(TreeNode* p, TreeNode* q) {
+	if (p == NULL and q == NULL) {
+		return true;
+	}
+
+	if (p == NULL or q == NULL) {
+		return false;
+	}
+
+	if (p->val != q->val) {
+		return false;
+	}
+
+	bool leftSubtreeCheck = isSameTree(p->left, q->left);
+	bool rightSubtreeCheck = isSameTree(p->right, q->right);
+
+	if (leftSubtreeCheck and rightSubtreeCheck) {
+		return true;
+	}
+
+	return false;
+}
+
+
+// Time: O(n^2)
+bool isSubtree(TreeNode* s, TreeNode* t) {
+	if (s == NULL) {
+		return false;
+	}
+
+	if (isSameTree(s, t)) {
+		return true;
+	}
+
+	bool leftMatch = isSubtree(s->left, t);
+	bool rightMatch = isSubtree(s->right, t);
+
+	if (leftMatch or rightMatch) {
+		return true;
+	}
+
+	return false;
+}
+
+
+//Time: O(n^2)
+int diameter(TreeNode* root) {
+	if (root == NULL) {
+		return 0;
+	}
+
+	int leftDiameter = diameter(root->left);
+	int rightDiameter = diameter(root->right);
+
+	int leftHeight = height(root->left);
+	int rightHeight = height(root->right);
+
+	int mereThrough = leftHeight + rightHeight + 2;
+
+	int totalDia = max(mereThrough, max(leftDiameter, rightDiameter));
+
+	return totalDia;
+}
+
+class DiaHeight {
+public:
+	int height;
+	int diameter;
+};
+
+// Time: O(n)
+DiaHeight diameterOptimized(TreeNode* root) {
+	DiaHeight val;
+
+	if (root == NULL) {
+		val.diameter = 0;
+		val.height = -1;
+		return val;
+	}
+
+	DiaHeight leftPair = diameterOptimized(root->left);
+	DiaHeight rightPair = diameterOptimized(root->right);
+
+	int leftDiameter = leftPair.diameter;
+	int rightDiameter = rightPair.diameter;
+
+	int leftHeight = leftPair.height;
+	int rightHeight = rightPair.height;
+
+	int mereThrough = leftHeight + rightHeight + 2;
+
+	int totalDia = max(mereThrough, max(leftDiameter, rightDiameter));
+
+	int meriHeight = max(leftHeight, rightHeight) + 1;
+
+	val.diameter = totalDia;
+	val.height = meriHeight;
+	return val;
 }
 
 int main() {
@@ -137,7 +270,17 @@ int main() {
 
 	// cout << countNodes(root) << endl;
 
-	cout << height(root) << endl;
+	// cout << height(root) << endl;
+
+	// replaceSum(root);
+
+	// preOrder(root);
+	// cout << endl;
+
+	// cout << diameter(root) << endl;
+	DiaHeight val = diameterOptimized(root);
+	cout << val.diameter << endl;
+	cout << val.height << endl;
 
 	return 0;
 }
