@@ -256,6 +256,249 @@ DiaHeight diameterOptimized(TreeNode* root) {
 	return val;
 }
 
+// Time: O(n^2)
+bool balanceBinaryTree(TreeNode* root) {
+	if (root == NULL) {
+		return true;
+	}
+
+	bool leftBalance = balanceBinaryTree(root->left);
+	bool rightBalance = balanceBinaryTree(root->right);
+
+	if (!leftBalance or !rightBalance) {
+		return false;
+	}
+
+	int leftHeight = height(root->left);
+	int rightHeight = height(root->right);
+
+	int gap = abs(leftHeight - rightHeight);
+
+	// if (gap > 1) {
+	// 	return false;
+	// }
+
+	// return true;
+	return gap <= 1;
+}
+
+class BalanceHeight {
+public:
+	int height;
+	bool balance;
+};
+
+BalanceHeight balanceOptimized(TreeNode* root) {
+	BalanceHeight val;
+
+	if (root == NULL) {
+		val.height = -1;
+		val.balance = true;
+		return val;
+	}
+
+	BalanceHeight leftPair = balanceOptimized(root->left);
+	BalanceHeight rightPair = balanceOptimized(root->right);
+
+	val.height = max(leftPair.height, rightPair.height) + 1;
+
+	if (!leftPair.balance or !rightPair.balance) {
+		val.balance = false;
+		return val;
+	}
+
+	int gap = abs(leftPair.height - rightPair.height);
+
+	if (gap > 1) {
+		val.balance = false;
+		return val;
+	}
+
+	val.balance = true;
+	return val;
+
+}
+
+void display(vector<int> &temp) {
+	for (int val : temp) {
+		cout << val << "->";
+	}
+	cout << endl;
+}
+
+void printRootToLeaf(TreeNode* root, vector<int> path) {
+	if (root == NULL) {
+		// display(path);
+		return;
+	}
+
+	path.push_back(root->val);
+
+	if (root->left == NULL and root->right == NULL) {
+		display(path);
+		return;
+	}
+
+	printRootToLeaf(root->left, path);
+	printRootToLeaf(root->right, path);
+}
+
+bool isMirror(TreeNode* p, TreeNode* q) {
+	if (p == NULL and q == NULL) {
+		return true;
+	}
+
+	if (p == NULL or q == NULL) {
+		return false;
+	}
+
+	if (p->val != q->val) {
+		return false;
+	}
+
+	bool leftCheck = isMirror(p->left, q->right);
+	bool rightCheck = isMirror(p->right, q->left);
+
+	return leftCheck and rightCheck;
+}
+
+bool isSymmetric(TreeNode* root) {
+	if (root == NULL) return true;
+
+	return isMirror(root->left, root->right);
+}
+
+void levelOrder(TreeNode* root) {
+
+	queue<TreeNode*> q;
+
+	q.push(root);
+
+	while (!q.empty()) {
+
+		TreeNode* temp = q.front();
+		q.pop();
+
+		cout << temp->val << " ";
+
+		if (temp->left != NULL) {
+			q.push(temp->left);
+		}
+
+		if (temp->right != NULL) {
+			q.push(temp->right);
+		}
+	}
+
+	cout << endl;
+}
+
+void levelOrderNewLine(TreeNode* root) {
+
+	queue< pair<TreeNode*, int> > q;
+
+	// pair<int, string> p(10, "pranav");
+	// cout << p.first << endl;
+	// cout << p.second << endl;
+
+	pair<TreeNode*, int> p(root, 1);
+
+	q.push(p);
+
+	int currLevel = 1;
+
+	// q.push({root, 1});
+
+	while (!q.empty()) {
+
+		pair<TreeNode*, int> temp = q.front();
+		q.pop();
+
+		TreeNode* node = temp.first;
+		int level = temp.second;
+
+		// MERA
+
+		if (currLevel == level) {
+			cout << node->val << " ";
+		} else if (currLevel < level) {
+			cout << endl;
+			cout << node->val << " ";
+			currLevel = level;
+		}
+
+		// PUSH
+		if (node->left != NULL) {
+			pair<TreeNode*, int> p(node->left, level + 1);
+			q.push(p);
+		}
+
+		if (node->right != NULL) {
+			pair<TreeNode*, int> p(node->right, level + 1);
+			q.push(p);
+		}
+	}
+
+	cout << endl;
+}
+
+// BFS
+// Time: O(n)
+void levelOrderNewLineBetter(TreeNode* root) {
+
+	queue<TreeNode*> q;
+
+	q.push(root);
+
+	while (!q.empty()) {
+
+		int len = q.size();
+
+		for (int i = 0; i < len; i++) {
+
+			TreeNode* temp = q.front();
+			q.pop();
+
+			cout << temp->val << " ";
+
+			if (temp->left != NULL) {
+				q.push(temp->left);
+			}
+
+			if (temp->right != NULL) {
+				q.push(temp->right);
+			}
+		}
+
+		cout << endl;
+	}
+}
+
+int maxSum(TreeNode* root, int &maxGlobal) {
+	if (root == NULL) {
+		return 0;
+	}
+
+	int leftMax = maxSum(root->left, maxGlobal);
+	int rightMax = maxSum(root->right, maxGlobal);
+
+	leftMax = max(0, leftMax);
+	rightMax = max(0, rightMax);
+
+	int mereThroughPath = leftMax + root->val + rightMax;
+
+	maxGlobal = max(maxGlobal, mereThroughPath);
+
+	return max(leftMax, rightMax) + root->val;
+}
+
+int maxPathSum(TreeNode* root) {
+
+	int maxGlobal = INT_MIN;
+	maxSum(root, maxGlobal);
+	return maxGlobal;
+}
+
 int main() {
 
 	TreeNode* root = NULL;
@@ -278,9 +521,18 @@ int main() {
 	// cout << endl;
 
 	// cout << diameter(root) << endl;
-	DiaHeight val = diameterOptimized(root);
-	cout << val.diameter << endl;
-	cout << val.height << endl;
+	// DiaHeight val = diameterOptimized(root);
+	// cout << val.diameter << endl;
+	// cout << val.height << endl;
+
+	// cout << balanceBinaryTree(root) << endl;
+
+	// vector<int> temp;
+	// printRootToLeaf(root, temp);
+
+	// levelOrder(root);
+	// levelOrderNewLine(root);
+	levelOrderNewLineBetter(root);
 
 	return 0;
 }
