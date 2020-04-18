@@ -207,8 +207,8 @@ int diameter(TreeNode* root) {
 		return 0;
 	}
 
-	int leftDiameter = diameter(root->left);
 	int rightDiameter = diameter(root->right);
+	int leftDiameter = diameter(root->left);
 
 	int leftHeight = height(root->left);
 	int rightHeight = height(root->right);
@@ -499,6 +499,96 @@ int maxPathSum(TreeNode* root) {
 	return maxGlobal;
 }
 
+int firstTime = 1;
+
+void leftView(TreeNode* root, int level) {
+	if (root == NULL) {
+		return;
+	}
+
+	if (level == firstTime) {
+		cout << root->val << " ";
+		firstTime++;
+	}
+
+	leftView(root->left, level + 1);
+	leftView(root->right, level + 1);
+}
+
+void leftBoundary(TreeNode* root) {
+	if (root == NULL) {
+		return;
+	}
+
+	if (root->left == NULL and root->right == NULL) {
+		return;
+	}
+
+	cout << root->val << " ";
+
+	if (root->left != NULL) {
+		leftBoundary(root->left);
+	} else {
+		leftBoundary(root->right);
+	}
+}
+
+void rightBoundary(TreeNode* root) {
+	if (root == NULL) {
+		return;
+	}
+
+	if (root->left == NULL and root->right == NULL) {
+		return;
+	}
+
+	if (root->right != NULL) {
+		rightBoundary(root->right);
+	} else {
+		rightBoundary(root->left);
+	}
+
+	cout << root->val << " ";
+}
+
+void printLeafNode(TreeNode* root) {
+	//TODO
+}
+
+void nodesKdistanceBelow(TreeNode* root, int k, int level) {
+	if (root == NULL) return;
+
+	if (level == k) {
+		cout << root->val << " ";
+	}
+
+	nodesKdistanceBelow(root->left, k, level + 1);
+	nodesKdistanceBelow(root->right, k, level + 1);
+}
+
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+	if (root == NULL) {
+		return NULL;
+	}
+
+	if (root == p or root == q) {
+		return root;
+	}
+
+	TreeNode* leftLCA = lowestCommonAncestor(root->left, p, q);
+	TreeNode* rightLCA = lowestCommonAncestor(root->right, p, q);
+
+	if (leftLCA != NULL and rightLCA != NULL) {
+		return root;
+	}
+
+	if (leftLCA == NULL and rightLCA == NULL) {
+		return NULL;
+	}
+
+	return leftLCA != NULL ? leftLCA : rightLCA;
+}
+
 int main() {
 
 	TreeNode* root = NULL;
@@ -532,7 +622,20 @@ int main() {
 
 	// levelOrder(root);
 	// levelOrderNewLine(root);
-	levelOrderNewLineBetter(root);
+	// levelOrderNewLineBetter(root);
+
+	// leftView(root, 1);
+	// cout << endl;
+
+	// leftBoundary(root);
+	// cout << endl;
+
+	// rightBoundary(root);
+	// cout << endl;
+
+	// int k = 3;
+	// nodesKdistanceBelow(root, k, 0);
+	// cout << endl;
 
 	return 0;
 }
