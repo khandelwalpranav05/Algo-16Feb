@@ -40,6 +40,7 @@ TreeNode* builtTree(TreeNode* root) {
 // Space: O(N) or O(h)
 void preOrder(TreeNode* root) {
 	if (root == NULL) {
+		cout << -1 << " ";
 		return;
 	}
 
@@ -555,17 +556,6 @@ void printLeafNode(TreeNode* root) {
 	//TODO
 }
 
-void nodesKdistanceBelow(TreeNode* root, int k, int level) {
-	if (root == NULL) return;
-
-	if (level == k) {
-		cout << root->val << " ";
-	}
-
-	nodesKdistanceBelow(root->left, k, level + 1);
-	nodesKdistanceBelow(root->right, k, level + 1);
-}
-
 TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 	if (root == NULL) {
 		return NULL;
@@ -587,6 +577,68 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 	}
 
 	return leftLCA != NULL ? leftLCA : rightLCA;
+}
+
+void serialize(TreeNode* root) {
+	if (root == NULL) {
+		cout << -1 << " ";
+		return;
+	}
+
+	cout << root->val << " ";
+
+	serialize(root->left);
+	serialize(root->right);
+}
+
+void nodesKdistanceBelow(TreeNode* root, int k, int level) {
+	if (root == NULL) return;
+
+	if (level == k) {
+		cout << root->val << " ";
+	}
+
+	nodesKdistanceBelow(root->left, k, level + 1);
+	nodesKdistanceBelow(root->right, k, level + 1);
+}
+
+int nodesAbove(TreeNode* root, TreeNode* target, int K, vector<int> &res) {
+	if (root == NULL) {
+		return INT_MIN;
+	}
+
+	if (root == target) {
+		return 0;
+	}
+
+	int leftDistance = nodesAbove(root->left, target, K, res);
+	int rightDistance = nodesAbove(root->right, target, K, res);
+
+	if (leftDistance + 1 == K or rightDistance + 1 == K) {
+		res.push_back(root->val);
+	}
+
+	int result = INT_MIN;
+
+	if (leftDistance >= 0) {
+		result = leftDistance + 1;
+		nodesKdistanceBelow(root->right, K, leftDistance + 2, res);
+	}
+
+	if (rightDistance >= 0) {
+		result = rightDistance + 1;
+		nodesKdistanceBelow(root->left, K, rightDistance + 2, res);
+	}
+
+	return result;
+}
+
+vector<int> distanceK(TreeNode* root, TreeNode* target, int K) {
+	vector<int> res;
+
+	nodesKdistanceBelow(target, K, 0, res);
+	nodesAbove(root, target, K, res);
+	return res;
 }
 
 int main() {
@@ -636,6 +688,9 @@ int main() {
 	// int k = 3;
 	// nodesKdistanceBelow(root, k, 0);
 	// cout << endl;
+
+	serialize(root);
+	cout << endl;
 
 	return 0;
 
