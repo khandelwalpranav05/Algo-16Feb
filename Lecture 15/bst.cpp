@@ -279,6 +279,27 @@ TreeNode* buildTreeFromPreorderInorder(int pre[], int in[], int start, int end) 
 	return root;
 }
 
+
+void helper(TreeNode* root, int &sum) {
+	if (root == NULL) return;
+
+	helper(root->right, sum);
+
+	//KAAM
+	sum += root->val;
+	root->val = sum;
+
+	helper(root->left, sum);
+}
+
+TreeNode* bstToGst(TreeNode* root) {
+	int sum = 0;
+
+	helper(root, sum);
+
+	return root;
+}
+
 int main() {
 
 	// TreeNode* root = insert();
@@ -307,17 +328,17 @@ int main() {
 	// preOrder(root);
 	// cout << endl;
 
-	int in[] = {1, 2, 3, 4, 5, 6, 7};
-	int pre[] = {4, 2, 1, 3, 6, 5, 7};
-	int n = 7;
+	// int in[] = {1, 2, 3, 4, 5, 6, 7};
+	// int pre[] = {4, 2, 1, 3, 6, 5, 7};
+	// int n = 7;
 
-	TreeNode* root = buildTreeFromPreorderInorder(pre, in, 0, n - 1);
+	// TreeNode* root = buildTreeFromPreorderInorder(pre, in, 0, n - 1);
 
-	preOrder(root);
-	cout << endl;
+	// preOrder(root);
+	// cout << endl;
 
-	inOrder(root);
-	cout << endl;
+	// inOrder(root);
+	// cout << endl;
 
 	return 0;
 }
