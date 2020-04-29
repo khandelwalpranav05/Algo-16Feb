@@ -134,32 +134,33 @@ void mappedString(string str, string ans) {
 		return;
 	}
 
-	char ch1 = str[0];
-	string ros1 = str.substr(1);
+	// str-> "123"
 
-	int ch1_int = ch1 - '0';
+	char ch1 = str[0]; // ch1-> '1'
+	string ros1 = str.substr(1); // ros1-> "23"
 
-	ch1 = ch1 + 16;
+	int ch1_int = ch1 - '0'; // ch1_int -> 1
 
-	mappedString(ros1, ans + ch1);
+	ch1 = ch1 + 16; // 49 + 16 = 65
 
-	if (str.length() > 1) {
+	mappedString(ros1, ans + ch1); // recursion("23","A") -> "ABC","AW"
 
-		char ch2 = str[1];
+	if (str.length() > 1) { // condition check
 
-		int ch2_int = ch2 - '0';
+		char ch2 = str[1]; // ch2-> '2'
 
-		int num = ch1_int * 10 + ch2_int;
+		int ch2_int = ch2 - '0'; // ch2_int-> 2
 
-		if (num <= 26) {
-			string ros2 = str.substr(2);
+		int num = ch1_int * 10 + ch2_int; // num-> 1*10 + 2 = 12 // num=12
 
-			ch2 = num + 64;
+		if (num <= 26) { // YES
+			string ros2 = str.substr(2); // ros2-> "3"
 
-			mappedString(ros2, ans + ch2);
+			ch2 = num + 64; // 12 + 64 = 76 ->(char) 'L'
+
+			mappedString(ros2, ans + ch2); // recursion("3","L") -> "LC"
 		}
 	}
-
 }
 
 int helper(int si, vector<int> &nums, int sum, int S) {
