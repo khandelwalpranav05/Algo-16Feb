@@ -34,6 +34,8 @@ int main() {
 
 	cout << hp["India"] << endl;
 
+	cout << hp.count("Canada") << endl;
+	cout << hp.count("IRAN") << endl;
 
 
 	return 0;
