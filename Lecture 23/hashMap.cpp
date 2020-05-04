@@ -126,6 +126,7 @@ public:
 			if (temp->next->key == key) {
 				break;
 			}
+
 			temp = temp->next;
 		}
 
