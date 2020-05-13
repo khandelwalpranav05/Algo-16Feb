@@ -123,6 +123,7 @@ int lengthOfLongestSubstring(string str) {
 	return maxLen;
 }
 
+//Time: O(nlogn)
 vector<int> topKFrequent(vector<int>& nums, int k) {
 	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int> >> pq;
 
@@ -150,6 +151,39 @@ vector<int> topKFrequent(vector<int>& nums, int k) {
 	}
 
 	return res;
+}
+
+// class Compare{
+// public:
+//     bool operator()(pair<int,string> &a,pair<int,string> &b){
+//         if(a.first==b.first){
+//             return a.second > b.second;
+//         }
+
+//         return a.first < b.first;
+//     }
+// };
+
+int subarraySum(vector<int>& nums, int k) {
+
+	unordered_map<int, int> hp;
+
+	int sum = 0;
+	hp[sum] = 1;
+
+	int count = 0;
+
+	for (int num : nums) {
+		sum += num;
+
+		if (hp.count(sum - k)) {
+			count += hp[sum - k];
+		}
+
+		hp[sum] += 1;
+	}
+
+	return count;
 }
 
 int main() {
