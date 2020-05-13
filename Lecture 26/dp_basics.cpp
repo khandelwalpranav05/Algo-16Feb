@@ -275,9 +275,113 @@ int numSquaresMemo(int n, vector<int> &dp) {
 	return minValue;
 }
 
-int numSquares(int n) {
+int numSquaresPUREDP(int n) {
+	vector<int> dp(n + 1, 0);
+
+	// BASE CASE
+	dp[0] = 0;
+	dp[1] = 1;
+
+	for (int i = 2; i <= n; i++) {
+
+		// RECURSIVE
+		int minValue = INT_MAX;
+
+		for (int j = 1; j * j <= i; j++) {
+			int abhiTakKaAnswer = dp[i - j * j] + 1;
+			minValue = min(abhiTakKaAnswer, minValue);
+		}
+
+		dp[i] = minValue;
+	}
+
+	return dp[n];
+}
+
+int helper(int si, vector<int> &nums, vector<int> &dp) {
+	if (si >= nums.size()) {
+		return 0;
+	}
+
+	if (dp[si] != -1) {
+		return dp[si];
+	}
+
+	int include = nums[si] + helper(si + 2, nums, dp);
+	int skip = helper(si + 1, nums, dp);
+
+	int result = max(include, skip);
+
+	dp[si] = result;
+
+	return result;
+}
+
+int rob(vector<int>& nums) {
+	if (nums.size() == 0) return 0;
+
+	vector<int> dp(nums.size() + 1, -1);
+
+	return helper(0, nums, dp);
+}
+
+int robPUREDP(vector<int>& nums) {
+	int n = nums.size();
+
+	if (n == 0) return 0;
+
+	vector<int> dp(n + 2);
+
+	//BASE CASE
+	dp[n + 1] = 0;
+	dp[n] = 0;
+
+	//RECURSIVE
+	for (int i = n - 1; i >= 0; i--) {
+
+		int include = nums[i] + dp[i + 2];
+		int skip = dp[i + 1];
+
+		dp[i] = max(include, skip);
+	}
+
+	return dp[0];
+}
+
+
+int helper(int n, vector<int> &dp) {
+	if (n == 0 or n == 1) {
+		return 1;
+	}
+
+	// check
+	if (dp[n] != -1) {
+		return dp[n];
+	}
+
+	int ans = 0;
+
+	for (int i = 1; i <= n; i++) {
+
+		int leftCount = helper(i - 1, dp);
+		int rightCount = helper(n - i, dp);
+
+		int mujheRoot = leftCount * rightCount;
+
+		ans += mujheRoot;
+	}
+
+	//store
+	dp[n] = ans;
+
+	return ans;
+}
+
+
+int numTreesMemo(int n) {
 	vector<int> dp(n + 1, -1);
-	return numSquaresMemo(n, dp);
+
+	return helper(n, dp);
 }
 
 int main() {
@@ -303,8 +407,8 @@ int main() {
 	// memset(dp, -1, sizeof(dp));
 	// cout << countBoardPathMemo(start, end, dp) << endl;
 
-	int n = 10;
-	cout << numSquares(n) << endl;
+	// int n = 10;
+	// cout << numSquares(n) << endl;
 
 	return 0;
 }
