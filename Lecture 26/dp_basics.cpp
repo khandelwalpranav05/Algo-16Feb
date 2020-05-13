@@ -377,12 +377,110 @@ int helper(int n, vector<int> &dp) {
 	return ans;
 }
 
+int numTreesPUREDP(int n) {
+
+	vector<int> dp(n + 1);
+
+	// BASE CASE
+	dp[0] = 1;
+	dp[1] = 1;
+
+	for (int i = 2; i <= n; i++) {
+
+		int ans = 0;
+		// i <- problem
+		// RECURSIVE
+		for (int x = 1; x <= i; x++) {
+			int leftCount = dp[x - 1];
+			int rightCount = dp[i - x];
+			ans += leftCount * rightCount;
+		}
+
+		dp[i] = ans;
+	}
+
+	return dp[n];
+}
 
 int numTreesMemo(int n) {
 	vector<int> dp(n + 1, -1);
 
 	return helper(n, dp);
 }
+
+int lengthOfLIS(vector<int>& nums) {
+	int n = nums.size();
+
+	if (n == 0) {
+		return 0;
+	}
+
+	vector<int> dp(n, 1);
+
+	int maxValue = 1;
+
+	for (int i = 1; i < n; i++) {
+		for (int j = 0; j < i; j++) {
+			if (nums[i] > nums[j]) {
+				dp[i] = max(dp[i], dp[j] + 1);
+			}
+		}
+		maxValue = max(dp[i], maxValue); // 1
+	}
+
+	// for(int val:dp){    // 2
+	//     maxValue = max(maxValue,val);
+	// }
+
+	return maxValue;
+}
+
+int helper(int i, string &s1, int j, string &s2, vector<vector<int> > &dp) {
+	// BASE CASE
+	if (i == s1.length() or j == s2.length()) {
+		dp[i][j] = 0;
+		return 0;
+	}
+
+	if (dp[i][j] != -1) {
+		return dp[i][j];
+	}
+
+	int result;
+
+	if (s1[i] == s2[j]) {
+		result = 1 + helper(i + 1, s1, j + 1, s2, dp);
+	} else {
+
+		int first = helper(i + 1, s1, j, s2, dp);
+		int second = helper(i, s1, j + 1, s2, dp);
+
+		result = max(first, second);
+	}
+
+	dp[i][j] = result;
+
+	for (int x = 0; x <= s1.length(); x++) {
+		for (int y = 0; y <= s2.length(); y++) {
+			cout << dp[x][y] << "\t";
+		}
+		cout << endl;
+	}
+	cout << "************************************" << endl;
+
+	return result;
+}
+
+int longestCommonSubsequenceMemo(string text1, string text2) {
+
+	int row = text1.length() + 1;
+	int col = text2.length() + 1;
+
+	vector<vector<int> > dp(row, vector<int> (col, -1));
+
+	return helper(0, text1, 0, text2, dp);
+}
+
 
 int main() {
 
@@ -409,6 +507,8 @@ int main() {
 
 	// int n = 10;
 	// cout << numSquares(n) << endl;
+
+	cout << longestCommonSubsequenceMemo("abcde", "afpcd") << endl;
 
 	return 0;
 }
