@@ -435,6 +435,8 @@ int lengthOfLIS(vector<int>& nums) {
 	return maxValue;
 }
 
+
+// Time:O(n^2)
 int helper(int i, string &s1, int j, string &s2, vector<vector<int> > &dp) {
 	// BASE CASE
 	if (i == s1.length() or j == s2.length()) {
@@ -482,6 +484,210 @@ int longestCommonSubsequenceMemo(string text1, string text2) {
 }
 
 
+// Time:O(n^2)
+int longestCommonSubsequencePUREDP(string s1, string s2) {
+
+	int row = s1.length() + 1;
+	int col = s2.length() + 1;
+
+	vector<vector<int> > dp(row, vector<int> (col, 0));
+
+	// BASE CASE
+	for (int i = 0; i < row; i++) {
+		dp[i][s2.length()] = 0;
+	}
+
+	for (int i = 0; i < col; i++) {
+		dp[s1.length()][i] = 0;
+	}
+
+
+	for (int i = s1.length() - 1; i >= 0; i--) {
+		for (int j = s2.length() - 1; j >= 0; j--) {
+
+			int result;
+
+			// RECURSIVE
+			if (s1[i] == s2[j]) {
+				result = 1 + dp[i + 1][j + 1];
+			} else {
+				int first = dp[i + 1][j];
+				int second = dp[i][j + 1];
+
+				result = max(first, second);
+			}
+
+			dp[i][j] = result;
+		}
+	}
+
+
+	return dp[0][0];
+}
+
+
+int numDistinctMemo(int si, string &s, int ti, string &t, vector<vector<int> > &dp) {
+	// BASE CASE
+	if (ti == t.length()) {
+		return 1;
+	}
+
+	if (si == s.length()) {
+		return 0;
+	}
+
+	if (dp[si][ti] != -1) {
+		return dp[si][ti];
+	}
+
+	// RECURSIVE CASE
+	int count = 0;
+
+	if (s[si] == t[ti]) {
+		count += numDistinctMemo(si + 1, s, ti + 1, t, dp);
+	}
+
+	count += numDistinctMemo(si + 1, s, ti, t, dp);
+
+	dp[si][ti] = count;
+
+	for (int x = 0; x <= s.length(); x++) {
+		for (int y = 0; y <= t.length(); y++) {
+			cout << dp[x][y] << "\t";
+		}
+		cout << endl;
+	}
+	cout << "************************************" << endl;
+
+	return count;
+}
+
+int numDistinct(string s, string t) {
+
+	int row = s.length() + 1;
+	int col = t.length() + 1;
+
+	vector<vector<int> > dp(row, vector<int> (col, -1));
+
+	return numDistinctMemo(0, s, 0, t, dp);
+}
+
+int numDistinctPUREDP(string s, string t) {
+
+	int row = s.length() + 1;
+	int col = t.length() + 1;
+
+	vector<vector<long> > dp(row, vector<long> (col, 0));
+
+	// BASE CASE
+
+	for (int i = 0; i < col; i++) {
+		dp[s.length()][i] = 0;
+	}
+
+	for (int i = 0; i < row; i++) {
+		dp[i][t.length()] = 1;
+	}
+
+	for (int si = s.length() - 1; si >= 0; si--) {
+		for (int ti = t.length() - 1; ti >= 0; ti--) {
+			// RECURSIVE
+
+			int count = 0;
+
+			if (s[si] == t[ti]) {
+				count += dp[si + 1][ti + 1];
+			}
+
+			count += dp[si + 1][ti];
+
+			dp[si][ti] = count;
+		}
+	}
+
+	return dp[0][0];
+}
+
+int helper(string &s, int left, int right, vector<vector<int> > &dp) {
+	//BASE CASE
+	if (left == right) {
+		return 1;
+	}
+
+	if (left > right) {
+		return 0;
+	}
+
+	if (dp[left][right] != -1) {
+		return dp[left][right];
+	}
+
+	// RECURSIVE
+	int result;
+
+	if (s[left] == s[right]) {
+		result = helper(s, left + 1, right - 1, dp) + 2;
+	} else {
+		int first = helper(s, left + 1, right, dp);
+		int second = helper(s, left, right - 1, dp);
+
+		result = max(first, second);
+	}
+
+	dp[left][right] = result;
+
+	return result;
+}
+
+int longestPalindromeSubseq(string s) {
+	int n = s.length();
+
+	vector<vector<int> > dp(n, vector<int> (n, -1));
+
+	return helper(s, 0, n - 1, dp);
+}
+
+int helper(vector<vector<int>>& grid, int sr, int sc, vector<vector<int>> &dp) {
+	int n = grid.size();
+	int m = grid[0].size();
+	// BASE CASE
+	if (sr == n - 1 and sc == m - 1) {
+		return grid[n - 1][m - 1];
+	}
+
+	if (sr > n - 1 or sc > m - 1) {
+		return INT_MAX;
+	}
+
+	if (dp[sr][sc] != -1) {
+		return dp[sr][sc];
+	}
+
+	// RECURSIVE
+	int value = grid[sr][sc];
+
+	int rightMinSum = helper(grid, sr, sc + 1, dp);
+	int downMinSum = helper(grid, sr + 1, sc, dp);
+
+	int result = min(rightMinSum, downMinSum) + value;
+
+	dp[sr][sc] = result;
+
+	return result;
+}
+
+int minPathSum(vector<vector<int>>& grid) {
+	int n = grid.size();
+	if (n == 0) {
+		return 0;
+	}
+	int m = grid[0].size();
+
+	vector<vector<int>> dp(n, vector<int> (m, -1));
+
+	return helper(grid, 0, 0, dp);
+}
+
 int main() {
 
 	// int n = 5;
@@ -508,7 +714,9 @@ int main() {
 	// int n = 10;
 	// cout << numSquares(n) << endl;
 
-	cout << longestCommonSubsequenceMemo("abcde", "afpcd") << endl;
+	// cout << longestCommonSubsequenceMemo("abcde", "afpcd") << endl;
+
+	// cout << numDistinct("bbagg", "bag") << endl;
 
 	return 0;
 }
