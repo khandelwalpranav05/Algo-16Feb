@@ -856,6 +856,50 @@ int knapSackPUREDP(int weight[], int value[], int capacity, int n) {
 	return dp[n][capacity];
 }
 
+int coinChange(int si, vector<int> &coins, int amount, vector<vector<int> > &dp) {
+	// BASE CASE
+	if (amount == 0) {
+		return 1;
+	}
+
+	if (si == coins.size()) {
+		return 0;
+	}
+
+	if (dp[si][amount] != -1) {
+		return dp[si][amount];
+	}
+
+	// RECURSIVE CASE
+	int count = 0;
+
+	if (amount >= coins[si]) {
+		count += coinChange(si, coins, amount - coins[si], dp);
+	}
+
+	count += coinChange(si + 1, coins, amount, dp);
+
+	dp[si][amount] = count;
+
+	return count;
+}
+
+int change(int amount, vector<int>& coins) {
+	int n = coins.size();
+
+	if (amount == 0) {
+		return 1;
+	}
+
+	if (n == 0) {
+		return 0;
+	}
+
+	vector<vector<int> > dp(n + 1, vector<int> (amount + 1, -1));
+
+	return coinChange(0, coins, amount, dp);
+}
+
 int main() {
 
 	// int n = 5;
