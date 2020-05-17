@@ -711,6 +711,36 @@ int maxEnvelopes(vector<vector<int> > &envelopes) {
 	return *max_element(dp.begin(), dp.end());
 }
 
+int longestPalindromeSubseqPUREDP(string s) {
+
+	int n = s.length();
+
+	vector<vector<int> > dp(n, vector<int> (n, 0));
+
+	//BASE CASE
+	for (int i = 0; i < n; i++) {
+		dp[i][i] = 1;
+	}
+
+	for (int col = 1; col < n; col++) {
+		for (int row = col - 1; row >= 0; row--) {
+			// RECURSIVE
+
+			if (s[row] == s[col]) {
+				dp[row][col] = dp[row + 1][col - 1] + 2;
+			} else {
+				dp[row][col] = max(dp[row + 1][col], dp[row][col - 1]);
+			}
+		}
+	}
+
+	return dp[0][n - 1];
+}
+
+int knapSack(int si, int weight[], int value[], int capacity, int n) {
+
+}
+
 int main() {
 
 	// int n = 5;
@@ -740,6 +770,13 @@ int main() {
 	// cout << longestCommonSubsequenceMemo("abcde", "afpcd") << endl;
 
 	// cout << numDistinct("bbagg", "bag") << endl;
+
+	int value[] = {50, 40, 70, 40};
+	int weight[] = {5, 4, 6, 3};
+	int capacity = 8;
+	int n = 4;
+
+	cout << knapSack(0, weight, value, capacity, n) << endl;
 
 	return 0;
 }
