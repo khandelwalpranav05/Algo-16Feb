@@ -856,7 +856,7 @@ int knapSackPUREDP(int weight[], int value[], int capacity, int n) {
 	return dp[n][capacity];
 }
 
-int coinChange(int si, vector<int> &coins, int amount, vector<vector<int> > &dp) {
+int coinChangeiiMemo(int si, vector<int> &coins, int amount, vector<vector<int> > &dp) {
 	// BASE CASE
 	if (amount == 0) {
 		return 1;
@@ -874,17 +874,17 @@ int coinChange(int si, vector<int> &coins, int amount, vector<vector<int> > &dp)
 	int count = 0;
 
 	if (amount >= coins[si]) {
-		count += coinChange(si, coins, amount - coins[si], dp);
+		count += coinChangeiiMemo(si, coins, amount - coins[si], dp);
 	}
 
-	count += coinChange(si + 1, coins, amount, dp);
+	count += coinChangeiiMemo(si + 1, coins, amount, dp);
 
 	dp[si][amount] = count;
 
 	return count;
 }
 
-int change(int amount, vector<int>& coins) {
+int coinChangeii(int amount, vector<int>& coins) {
 	int n = coins.size();
 
 	if (amount == 0) {
@@ -897,7 +897,238 @@ int change(int amount, vector<int>& coins) {
 
 	vector<vector<int> > dp(n + 1, vector<int> (amount + 1, -1));
 
-	return coinChange(0, coins, amount, dp);
+	return coinChangeiiMemo(0, coins, amount, dp);
+}
+// start = 0 end = n
+int countBoardPathDIFF(int n, int dp[]) {
+	if (n == 0) return 1;
+
+	if (n < 0) return 0;
+
+	if (dp[n] != -1) return dp[n];
+
+	int count = 0;
+
+	for (int dice = 1; dice <= 6; dice++) {
+		count += countBoardPathDIFF(n - dice, dp);
+	}
+
+	dp[n] = count;
+
+	for (int i = 0; i <= 10; i++) {
+		cout << dp[i] << "\t";
+	}
+	cout << endl << "*************************" << endl;
+
+	return count;
+}
+
+
+int coinChangeImemo(vector<int> &coins, int amount, vector<int> &dp) {
+	//BASE CASE
+	if (amount == 0) {
+		return 0;
+	}
+
+	if (amount < 0) {
+		return -1;
+	}
+
+	if (dp[amount] != -2) {
+		return dp[amount];
+	}
+
+	// RECURSIVE CASE
+	int minValue = INT_MAX;
+
+	for (int coin : coins) {
+		int recursionResult = coinChangeImemo(coins, amount - coin, dp);
+
+		if (recursionResult >= 0) {
+			minValue = min(minValue, recursionResult + 1);
+		}
+	}
+
+	// minValue <- INT_MAX
+
+	dp[amount] = minValue == INT_MAX ? -1 : minValue;
+
+	return dp[amount];
+}
+
+int coinChange(vector<int>& coins, int amount) {
+
+	vector<int> dp(amount + 1, -2);
+	return coinChangeImemo(coins, amount, dp);
+}
+
+
+
+// int onesAndZeros(int si, vector<string> &strs, int m, int n, vector<vector<vector<int>>> &dp) {
+// 	// BASE CASE
+// 	if (si == strs.size()) {
+// 		return 0;
+// 	}
+
+// 	if (dp[si][m][n] != -1) {
+// 		return dp[si][m][n];
+// 	}
+
+// 	// RECURSIVE CASE
+// 	int include = 0;
+
+// 	string curr = strs[si];
+
+// 	int zeros = 0;
+// 	int ones = 0;
+
+// 	for (char ch : curr) {
+// 		if (ch == '1') {
+// 			ones++;
+// 		} else {
+// 			zeros++;
+// 		}
+// 	}
+
+// 	if (ones <= n and zeros <= m) {
+// 		include = onesAndZeros(si + 1, strs, m - zeros, n - ones, dp) + 1;
+// 	}
+
+// 	int exclude = onesAndZeros(si + 1, strs, m, n, dp);
+
+// 	int result = max(include, exclude);
+
+// 	dp[si][m][n] = result;
+
+// 	return result;
+// }
+
+// int findMaxForm(vector<string>& strs, int m, int n) {
+
+// 	int len = strs.size();
+
+// 	vector<vector<vector<int>>> dp(len + 1, vector<vector<int>> (m + 1, vector<int> (n + 1, -1)));
+
+// 	return onesAndZeros(0, strs, m, n, dp);
+// }
+
+
+bool isPalindrome(string &str, int left, int right) {
+	while (left <= right) {
+		if (str[left] != str[right]) {
+			return false;
+		}
+		left++;
+		right--;
+	}
+
+	return true;
+}
+
+int partitioningPalindrome(string &str, int left, int right, vector<vector<int> > &dp) {
+	if (left >= right) {
+		return 0;
+	}
+
+	if (isPalindrome(str, left, right)) {
+		dp[left][right] = 0;
+		return 0;
+	}
+
+	if (dp[left][right] != -1) {
+		return dp[left][right];
+	}
+
+	int minValue = INT_MAX;
+
+	for (int i = left; i < right; i++) {
+
+		if (isPalindrome(str, left, i)) {
+			int rightCuts = partitioningPalindrome(str, i + 1, right, dp);
+			int currentCuts = 1 + rightCuts;
+
+			minValue = min(minValue, currentCuts);
+		}
+
+	}
+
+	dp[left][right] = minValue;
+
+	return minValue;
+}
+
+int minCut(string s) {
+	int n = s.length();
+
+	vector<vector<int> > dp(n, vector<int> (n, -1));
+
+	return partitioningPalindrome(s, 0, n - 1, dp);
+}
+
+int matrixChainMultiplication(int arr[], int i, int j) {
+	if (i >= j) {
+		return 0;
+	}
+
+	int minCost = INT_MAX;
+
+	for (int x = i; x < j; x++) {
+
+		int leftCost = matrixChainMultiplication(arr, i, x);
+		int rightCost = matrixChainMultiplication(arr, x + 1, j);
+
+		int meriCost = leftCost + arr[i - 1] * arr[x] * arr[j] + rightCost;
+
+		minCost = min(minCost, meriCost);
+	}
+
+	return minCost;
+}
+
+int MOD = 1e9 + 7;
+int restoreArray(int si, string &str, int k, vector<int> &dp) {
+	if (si == str.length()) {
+		return 1;
+	}
+
+	if (str[si] == '0') {
+		return 0;
+	}
+
+	if (dp[si] != -1) {
+		return dp[si];
+	}
+
+	int count = 0;
+
+	long val = 0;
+
+	for (int i = si; i < str.length(); i++) {
+		char ch = str[i];
+
+		int num = ch - '0';
+
+		val = val * 10. + num;
+
+		if (val > k) {
+			break;
+		}
+
+		int recursionResult = restoreArray(i + 1, str, k, dp);
+		count = (count + recursionResult) % MOD;
+	}
+
+	dp[si] = count;
+
+	return count;
+}
+
+int numberOfArrays(string s, int k) {
+	int n = s.length();
+
+	vector<int> dp(n + 1, -1);
+
+	return restoreArray(0, s, k, dp);
 }
 
 int main() {
@@ -930,15 +1161,25 @@ int main() {
 
 	// cout << numDistinct("bbagg", "bag") << endl;
 
-	int value[] = {50, 40, 70, 40};
-	int weight[] = {5, 4, 6, 3};
-	int capacity = 8;
-	int n = 4;
+	// int value[] = {50, 40, 70, 40};
+	// int weight[] = {5, 4, 6, 3};
+	// int capacity = 8;
+	// int n = 4;
 
 	// memset(knapSackDP, -1, sizeof(knapSackDP));
 	// cout << knapSack(0, weight, value, capacity, n) << endl;
 	// cout << knapSackDIFF(n, weight, value, capacity) << endl;
-	cout << knapSackPUREDP(weight, value, capacity, n) << endl;
+	// cout << knapSackPUREDP(weight, value, capacity, n) << endl;
+
+	// int n = 10;
+	// int dp[n + 1];
+	// memset(dp, -1, sizeof(dp));
+	// countBoardPathDIFF(n, dp);
+
+	int arr[] = {40, 20, 30, 10, 30};
+	int n = 5;
+
+	cout << matrixChainMultiplication(arr, 1, n - 1) << endl;
 
 	return 0;
 }
