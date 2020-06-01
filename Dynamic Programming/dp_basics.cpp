@@ -899,6 +899,27 @@ int coinChangeii(int amount, vector<int>& coins) {
 
 	return coinChangeiiMemo(0, coins, amount, dp);
 }
+
+int coinChangeiiPUREDP(int amount, vector<int>& coins) {
+	if (amount == 0) return 1;
+
+	if (coins.size() == 0) return 0;
+
+	int dp[amount + 1] = {0};
+
+	dp[0] = 1;
+
+	for (int coin : coins) {
+		for (int i = 1; i <= amount; i++) {
+			if (coin <= i) {
+				dp[i] += dp[i - coin];
+			}
+		}
+	}
+
+	return dp[amount];
+}
+
 // start = 0 end = n
 int countBoardPathDIFF(int n, int dp[]) {
 	if (n == 0) return 1;
@@ -962,55 +983,75 @@ int coinChange(vector<int>& coins, int amount) {
 	return coinChangeImemo(coins, amount, dp);
 }
 
+int coinChangeIPUREDP(vector<int>& coins, int amount) {
+	if (amount == 0) {
+		return 0;
+	}
 
+	int dp[amount + 1];
 
-// int onesAndZeros(int si, vector<string> &strs, int m, int n, vector<vector<vector<int>>> &dp) {
-// 	// BASE CASE
-// 	if (si == strs.size()) {
-// 		return 0;
-// 	}
+	for (int i = 0; i <= amount; i++) dp[i] = amount + 1;
 
-// 	if (dp[si][m][n] != -1) {
-// 		return dp[si][m][n];
-// 	}
+	dp[0] = 0;
 
-// 	// RECURSIVE CASE
-// 	int include = 0;
+	for (int i = 1; i <= amount; i++) {
+		for (int coin : coins) {
+			if (coin <= i) {
+				dp[i] = min(dp[i], dp[i - coin] + 1);
+			}
+		}
+	}
 
-// 	string curr = strs[si];
+	return dp[amount] > amount ? -1 : dp[amount];
+}
 
-// 	int zeros = 0;
-// 	int ones = 0;
+int onesAndZeros(int si, vector<string> &strs, int m, int n, vector<vector<vector<int>>> &dp) {
+	// BASE CASE
+	if (si == strs.size()) {
+		return 0;
+	}
 
-// 	for (char ch : curr) {
-// 		if (ch == '1') {
-// 			ones++;
-// 		} else {
-// 			zeros++;
-// 		}
-// 	}
+	if (dp[si][m][n] != -1) {
+		return dp[si][m][n];
+	}
 
-// 	if (ones <= n and zeros <= m) {
-// 		include = onesAndZeros(si + 1, strs, m - zeros, n - ones, dp) + 1;
-// 	}
+	// RECURSIVE CASE
+	int include = 0;
 
-// 	int exclude = onesAndZeros(si + 1, strs, m, n, dp);
+	string curr = strs[si];
 
-// 	int result = max(include, exclude);
+	int zeros = 0;
+	int ones = 0;
 
-// 	dp[si][m][n] = result;
+	for (char ch : curr) {
+		if (ch == '1') {
+			ones++;
+		} else {
+			zeros++;
+		}
+	}
 
-// 	return result;
-// }
+	if (ones <= n and zeros <= m) {
+		include = onesAndZeros(si + 1, strs, m - zeros, n - ones, dp) + 1;
+	}
 
-// int findMaxForm(vector<string>& strs, int m, int n) {
+	int exclude = onesAndZeros(si + 1, strs, m, n, dp);
 
-// 	int len = strs.size();
+	int result = max(include, exclude);
 
-// 	vector<vector<vector<int>>> dp(len + 1, vector<vector<int>> (m + 1, vector<int> (n + 1, -1)));
+	dp[si][m][n] = result;
 
-// 	return onesAndZeros(0, strs, m, n, dp);
-// }
+	return result;
+}
+
+int findMaxForm(vector<string>& strs, int m, int n) {
+
+	int len = strs.size();
+
+	vector<vector<vector<int>>> dp(len + 1, vector<vector<int>> (m + 1, vector<int> (n + 1, -1)));
+
+	return onesAndZeros(0, strs, m, n, dp);
+}
 
 
 bool isPalindrome(string &str, int left, int right) {
@@ -1131,6 +1172,101 @@ int numberOfArrays(string s, int k) {
 	return restoreArray(0, s, k, dp);
 }
 
+
+int combinationSumIVHelper(vector<int> &nums, int target, vector<int> &dp) {
+
+	if (target == 0) return 1;
+
+	if (dp[target] != -1) return dp[target];
+
+	int count = 0;
+
+	for (int num : nums) {
+		if (num <= target) {
+			count += combinationSumIVHelper(nums, target - num, dp);
+		}
+	}
+
+	dp[target] = count;
+	return count;
+}
+
+int combinationSumIVMemo(vector<int>& nums, int target) {
+
+	vector<int> dp(target + 1, -1);
+
+	return combinationSumIVHelper(nums, target, dp);
+}
+
+int combinationSumIVPUREDP(vector<int>& nums, int target) {
+	vector<unsigned int> dp(target + 1, 0);
+
+	dp[0] = 1;
+
+	for (int currTarget = 1; currTarget <= target; currTarget++) {
+		for (int num : nums) {
+			if (num <= currTarget) {
+				dp[currTarget] += dp[currTarget - num];
+			}
+		}
+	}
+
+	return dp[target];
+}
+
+
+
+int minInsertionsMemo(string &str, int left, int right, vector<vector<int> > &dp) {
+	// if(left>right) return INT_MAX;
+
+	if (left >= right) return 0;
+
+	if (dp[left][right] != -1) return dp[left][right];
+
+	int result = INT_MAX;
+
+	if (str[left] == str[right]) {
+
+		result = minInsertionsMemo(str, left + 1, right - 1, dp);
+
+	} else {
+
+		int first = minInsertionsMemo(str, left + 1, right, dp);
+		int second = minInsertionsMemo(str, left, right - 1, dp);
+
+		result = min(first, second) + 1;
+	}
+
+	dp[left][right] = result;
+
+	return result;
+}
+
+int minInsertions(string s) {
+
+	vector<vector<int> > dp(s.length(), vector<int> (s.length(), -1));
+
+	return minInsertionsMemo(s, 0, s.length() - 1, dp);
+}
+
+int minInsertionsPUREDP(string s) {
+	if (s.length() == 0 or s.length() == 1) return 0;
+
+	vector<vector<int> > dp(s.length(), vector<int> (s.length(), 0));
+
+	for (int col = 1; col <= s.length() - 1; col++) {
+		for (int row = col - 1; row >= 0; row--) {
+			if (s[row] == s[col]) {
+				dp[row][col] = dp[row + 1][col - 1];
+			} else {
+				dp[row][col] = min(dp[row + 1][col], dp[row][col - 1]) + 1;
+			}
+		}
+	}
+
+	return dp[0][s.length() - 1];
+}
+
 int main() {
 
 	// int n = 5;
@@ -1176,10 +1312,10 @@ int main() {
 	// memset(dp, -1, sizeof(dp));
 	// countBoardPathDIFF(n, dp);
 
-	int arr[] = {40, 20, 30, 10, 30};
-	int n = 5;
+	// int arr[] = {40, 20, 30, 10, 30};
+	// int n = 5;
 
-	cout << matrixChainMultiplication(arr, 1, n - 1) << endl;
+	// cout << matrixChainMultiplication(arr, 1, n - 1) << endl;
 
 	return 0;
 }
