@@ -34,6 +34,21 @@ int findJudge(int N, vector<vector<int>>& trust) {
 }
 
 int n;
+
+void dfs(int node, unordered_map<int, vector<int>> adjList, vector<int> temp, vector<vector<int>> &res) {
+	if (node == n - 1) {
+		temp.push_back(node);
+		res.push_back(temp);
+		return;
+	}
+
+	temp.push_back(node);
+
+	for (int neighbor : adjList[node]) {
+		dfs(neighbor, adjList, temp, res);
+	}
+}
+
 vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
 
 	n = graph.size();
@@ -54,18 +69,19 @@ vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
 	return res;
 }
 
-void dfs(int node, unordered_map<int, vector<int>> adjList, vector<int> temp, vector<vector<int>> &res) {
-	if (node == n - 1) {
-		temp.push_back(node);
-		res.push_back(temp);
+void dfsHelper(vector<vector<char>>& grid, int i, int j) {
+	int n = grid.size();
+	int m = grid[0].size();
+
+	if (i<0 or i >= n or j<0 or j >= m or grid[i][j] == '0') {
 		return;
 	}
 
-	temp.push_back(node);
-
-	for (int neighbor : adjList[node]) {
-		dfs(neighbor, adjList, temp, res);
-	}
+	grid[i][j] = '0';
+	dfsHelper(grid, i + 1, j);
+	dfsHelper(grid, i, j + 1);
+	dfsHelper(grid, i, j - 1);
+	dfsHelper(grid, i - 1, j);
 }
 
 int numIslands(vector<vector<char>>& grid) {
@@ -89,20 +105,6 @@ int numIslands(vector<vector<char>>& grid) {
 	return islands;
 }
 
-void dfsHelper(vector<vector<char>>& grid, int i, int j) {
-	int n = grid.size();
-	int m = grid[0].size();
-
-	if (i<0 or i >= n or j<0 or j >= m or grid[i][j] == '0') {
-		return;
-	}
-
-	grid[i][j] = '0';
-	dfsHelper(grid, i + 1, j);
-	dfsHelper(grid, i, j + 1);
-	dfsHelper(grid, i, j - 1);
-	dfsHelper(grid, i - 1, j);
-}
 
 int orangesRotting(vector<vector<int>>& grid) {
 	int n = grid.size();
@@ -229,6 +231,207 @@ vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
 	}
 
 	return res;
+}
+
+
+bool jumpGameIII(vector<int> &arr, int idx, unordered_set<int> &visited) {
+	if (visited.count(idx)) {
+		return false;
+	}
+
+	visited.insert(idx);
+
+	if (arr[idx] == 0) {
+		return true;
+	}
+
+	bool left = false;
+	bool right = false;
+
+	if (idx + arr[idx] < arr.size()) {
+		left = jumpGameIII(arr, idx + arr[idx], visited);
+	}
+
+	if (idx - arr[idx] >= 0) {
+		right = jumpGameIII(arr, idx - arr[idx], visited);
+	}
+
+	return left or right;
+}
+
+bool canReach(vector<int>& arr, int start) {
+
+	unordered_set<int> visited;
+
+	return jumpGameIII(arr, start, visited);
+}
+
+
+bool CourseSchedule(int numCourses, vector<vector<int>>& prerequisites) {
+
+	unordered_map<int, vector<int> > adjList;
+
+	vector<int> indegree(numCourses, 0);
+
+	for (auto val : prerequisites) {
+		adjList[val[1]].push_back(val[0]);
+		indegree[val[0]]++;
+	}
+
+	queue<int> q;
+
+	for (int i = 0; i < indegree.size(); i++) {
+		if (indegree[i] == 0) {
+			q.push(i);
+		}
+	}
+
+	while (!q.empty()) {
+
+		int node = q.front();
+		q.pop();
+
+		for (int neighbor : adjList[node]) {
+			indegree[neighbor]--;
+
+			if (indegree[neighbor] == 0) {
+				q.push(neighbor);
+			}
+		}
+
+	}
+
+	for (int val : indegree) {
+		if (val) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+vector<int> CourseScheduleII(int numCourses, vector<vector<int>>& prerequisites) {
+	unordered_map<int, vector<int> > adjList;
+
+	vector<int> indegree(numCourses, 0);
+
+	for (auto val : prerequisites) {
+		adjList[val[1]].push_back(val[0]);
+		indegree[val[0]]++;
+	}
+
+	queue<int> q;
+
+	vector<int> res;
+
+	for (int i = 0; i < indegree.size(); i++) {
+		if (indegree[i] == 0) {
+			q.push(i);
+			res.push_back(i);
+		}
+	}
+
+	while (!q.empty()) {
+
+		int node = q.front();
+		q.pop();
+
+		for (int neighbor : adjList[node]) {
+			indegree[neighbor]--;
+
+			if (indegree[neighbor] == 0) {
+				q.push(neighbor);
+				res.push_back(neighbor);
+			}
+		}
+
+	}
+
+	for (int val : indegree) {
+		if (val) {
+			res.clear();
+			return res;
+		}
+	}
+
+	return res;
+}
+
+
+vector<vector<int>> maxtrix01(vector<vector<int>>& matrix) {
+	int n = matrix.size();
+	int m = matrix[0].size();
+
+	vector<vector<int> > res(n, vector<int> (m, INT_MAX));
+
+	queue<pair<pair<int, int>, int> > q;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (matrix[i][j] == 0) {
+				res[i][j] = 0;
+				q.push({{i, j}, 0});
+			}
+		}
+	}
+
+	int x[] = {1, 0, -1, 0};
+	int y[] = {0, 1, 0, -1};
+
+	while (!q.empty()) {
+
+		auto temp = q.front();
+		q.pop();
+
+		int row = temp.first.first;
+		int col = temp.first.second;
+		int dist = temp.second;
+
+		for (int i = 0; i < 4; i++) {
+			int r = row + x[i];
+			int c = col + y[i];
+
+			if (r >= 0 and c >= 0 and r < n and c < m and res[r][c] == INT_MAX) {
+				res[r][c] = 1 + dist;
+				q.push({{r, c}, dist + 1});
+			}
+		}
+	}
+
+	return res;
+}
+
+void helper(int root, unordered_map<int, vector<int> > &adjList, unordered_set<int> &visited) {
+	if (visited.count(root)) {
+		return;
+	}
+
+	visited.insert(root);
+
+	for (int neighbor : adjList[root]) {
+		helper(neighbor, adjList, visited);
+	}
+}
+
+bool keysAndRoom(vector<vector<int>>& rooms) {
+
+	unordered_map<int, vector<int> > adjList;
+
+	for (int i = 0; i < rooms.size(); i++) {
+		for (int val : rooms[i]) {
+			adjList[i].push_back(val);
+		}
+	}
+
+	unordered_set<int> visited;
+
+	helper(0, adjList, visited);
+
+	if (visited.size() == rooms.size()) {
+		return true;
+	}
+
+	return false;
 }
 
 int main() {
