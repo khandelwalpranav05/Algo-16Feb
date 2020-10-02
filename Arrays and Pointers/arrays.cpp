@@ -1,18 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <unordered_map>
-#include <climits>
-#include <algorithm>
-#include <cmath>
-#include <bitset>
-#include <cstdio>
-#include <cstring>
-#include <stack>
-#include <iomanip>
-#include <set>
-#include <map>
-
+#include<bits/stdc++.h>
 using namespace std;
 
 void swap(int arr[], int i, int j) {
@@ -55,11 +41,3 @@ int main() {
 
 	return 0;
 }
-
-
-
-
-
-
-
-
